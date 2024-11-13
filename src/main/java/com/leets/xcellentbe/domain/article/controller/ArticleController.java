@@ -2,7 +2,9 @@ package com.leets.xcellentbe.domain.article.controller;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -87,13 +89,15 @@ public class ArticleController {
 	}
 
 	//메인 페이지 게시글 조회
-	@GetMapping
+	@GetMapping("/articles")
 	@Operation(summary = "게시글 목록 조회(스크롤)", description = "페이징을 적용하여 게시글 목록을 조회합니다.")
 	public ResponseEntity<GlobalResponseDto<Page<ArticleResponseDto>>> getArticles(
 		HttpServletRequest request,
 		@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime cursor,
 		@RequestParam(defaultValue = "10") int size) {
+
 		Page<ArticleResponseDto> articles = articleService.getArticles(request, cursor, size);
+
 		return ResponseEntity.status(HttpStatus.OK).body(GlobalResponseDto.success(articles));
 	}
 
