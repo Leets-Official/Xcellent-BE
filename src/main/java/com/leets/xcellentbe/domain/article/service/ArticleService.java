@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -175,24 +176,17 @@ public class ArticleService {
 	}
 
 	//게시글 전체 조회
-	public List<ArticleResponseDto> getArticles(HttpServletRequest request, LocalDateTime cursor, int size) {
-
+	public Page<ArticleResponseDto> getArticles(HttpServletRequest request, LocalDateTime cursor, int size) {
 		User user = getUser(request);
-
 		Pageable pageable = PageRequest.of(0, size);
 
-		List<Article> articles = (cursor == null) ?
-			articleRepository.findRecentArticles(pageable) : // 처음 로드 시
-			articleRepository.findRecentArticles(cursor, pageable);
+		Page<Article> articles = articleRepository.findRecentArticles(cursor, pageable);
 
-		return articles
-			.stream()
-			.map(article -> {
-				boolean isOwner = article.getWriter().getUserId().equals(user.getUserId());
-				ArticleStatsDto stats = findArticleStats(article);
-				return ArticleResponseDto.fromWithoutComments(article, isOwner, stats);
-			})
-			.collect(Collectors.toList());
+		return articles.map(article -> {
+			boolean isOwner = article.getWriter().getUserId().equals(user.getUserId());
+			ArticleStatsDto stats = findArticleStats(article);
+			return ArticleResponseDto.fromWithoutComments(article, isOwner, stats);
+		});
 	}
 
 	//리포스트 작성 (인용 x, 단순)
