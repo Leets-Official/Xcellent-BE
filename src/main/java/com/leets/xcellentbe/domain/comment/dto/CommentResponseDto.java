@@ -48,8 +48,8 @@ public class CommentResponseDto {
 		if (depth <= 0 || comment == null) { // 깊이 제한 또는 null일 때 호출 중단
 			return CommentResponseDto.builder()
 				.commentId(comment.getCommentId())
-				.userName(comment.getArticle().getWriter().getUserName())
-				.customId(comment.getArticle().getWriter().getCustomId())
+				.userName(comment.getWriter().getUserName())
+				.customId(comment.getWriter().getCustomId())
 				.content(comment.getContent())
 				.deletedStatus(comment.getDeletedStatus())
 				.viewCnt(comment.getViewCnt())
@@ -62,8 +62,8 @@ public class CommentResponseDto {
 
 		return CommentResponseDto.builder()
 			.commentId(comment.getCommentId())
-			.userName(comment.getArticle().getWriter().getUserName())
-			.customId(comment.getArticle().getWriter().getCustomId())
+			.userName(comment.getWriter().getUserName())
+			.customId(comment.getWriter().getCustomId())
 			.content(comment.getContent())
 			.deletedStatus(comment.getDeletedStatus())
 			.viewCnt(comment.getViewCnt())
